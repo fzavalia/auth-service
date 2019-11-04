@@ -10,8 +10,6 @@ interface AccountRepository {
   find: (username: string) => Promise<Account>;
 }
 
-export class AccountAlreadyExists extends Error {}
-
 export class AccountNotFound extends Error {}
 
 export default AccountRepository;

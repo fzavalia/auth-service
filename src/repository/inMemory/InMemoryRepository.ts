@@ -11,7 +11,7 @@ abstract class InMemoryRepository<T> {
     new Promise<void>((resolve, reject) => {
       const index = this.extractIndexFromElement(element);
       if (this.elements[index]) {
-        reject(new NotFound());
+        reject(new AlreadyExists());
       } else {
         this.elements[index] = element;
         resolve();
@@ -30,5 +30,7 @@ abstract class InMemoryRepository<T> {
 }
 
 export class NotFound extends Error {}
+
+export class AlreadyExists extends Error {}
 
 export default InMemoryRepository;

@@ -10,8 +10,4 @@ interface AccessTokenRepository {
   invalidateAllForAccount: (accountUsername: string) => Promise<void>;
 }
 
-export class AccessTokenAlreadyExists extends Error {}
-
-export class AccessTokenNotFound extends Error {}
-
 export default AccessTokenRepository;

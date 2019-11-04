@@ -11,8 +11,4 @@ interface RefreshTokenRepository {
   invalidateAllForAccount: (accountUsername: string) => Promise<void>;
 }
 
-export class RefreshTokenAlreadyExists extends Error {}
-
-export class RefreshTokenNotFound extends Error {}
-
 export default RefreshTokenRepository;
