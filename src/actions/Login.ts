@@ -1,6 +1,6 @@
-import AccountRepository, { Account } from "../repository/AccountRepository";
-import AccessTokenRepository from "../repository/AccessTokenRepository";
-import RefreshTokenRepository from "../repository/RefreshTokenRepository";
+import AccountRepository, { Account } from "../repository/AccountRepository/AccountRepository";
+import AccessTokenRepository from "../repository/AccessTokenRepository/AccessTokenRepository";
+import RefreshTokenRepository from "../repository/RefreshTokenRepository/RefreshTokenRepository";
 
 interface LoginResult {
   accessToken: string;
