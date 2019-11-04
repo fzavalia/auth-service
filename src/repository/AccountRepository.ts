@@ -1,7 +1,7 @@
 export interface Account {
   username: string;
   password: string;
-  confirmation: boolean;
+  active: boolean;
 }
 
 interface AccountRepository {
