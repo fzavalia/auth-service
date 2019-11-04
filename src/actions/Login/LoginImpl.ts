@@ -1,19 +1,11 @@
-import AccountRepository, { Account } from "../repository/AccountRepository/AccountRepository";
-import AccessTokenRepository from "../repository/AccessTokenRepository/AccessTokenRepository";
-import RefreshTokenRepository from "../repository/RefreshTokenRepository/RefreshTokenRepository";
+import Login, { Salt, TokenFactory } from "./Login";
+import AccountRepository, {
+  Account
+} from "../../repository/AccountRepository/AccountRepository";
+import AccessTokenRepository from "../../repository/AccessTokenRepository/AccessTokenRepository";
+import RefreshTokenRepository from "../../repository/RefreshTokenRepository/RefreshTokenRepository";
 
-interface LoginResult {
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface Login {
-  exec: (username: string, password: string) => Promise<LoginResult>;
-}
-
-export class LoginImpl implements Login {
-  private readonly secret = "my-secret";
-
+class LoginImpl implements Login {
   constructor(
     private readonly accountRepository: AccountRepository,
     private readonly accessTokenRepository: AccessTokenRepository,
@@ -57,13 +49,4 @@ export class LoginImpl implements Login {
   };
 }
 
-interface Salt {
-  validate: (data: string, hash: string) => Promise<void>;
-}
-
-interface TokenFactory {
-  makeAccessToken: () => Promise<string>;
-  makeRefreshToken: () => Promise<string>;
-}
-
-export default Login;
+export default LoginImpl;
