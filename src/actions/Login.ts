@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import uuid from "uuid/v4";
 import AccountRepository from "../repository/AccountRepository";
 import AccessTokenRepository from "../repository/AccessTokenRepository";
 import RefreshTokenRepository from "../repository/RefreshTokenRepository";
@@ -35,7 +35,7 @@ class TokenFactory {
 
   makeAccessToken = async (accountUsername: string) => {
     await this.atRepository.invalidateAllForAccount(accountUsername);
-    const at = jwt.sign("foo", "secret");
+    const at = uuid();
     await this.atRepository.create({
       value: at,
       valid: true,
@@ -46,7 +46,7 @@ class TokenFactory {
 
   makeRefreshToken = async (accountUsername: string, accessToken: string) => {
     await this.rtRepository.invalidateAllForAccount(accountUsername);
-    const rt = jwt.sign("foo", "secret");
+    const rt = uuid();
     await this.rtRepository.create({
       value: rt,
       valid: true,
