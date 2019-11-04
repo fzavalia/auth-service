@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import AccountRepository from "../../repository/AccountRepository/AccountRepository";
-import AccessTokenRepository from "../../repository/AccessTokenRepository/AccessTokenRepository";
-import RefreshTokenRepository from "../../repository/RefreshTokenRepository/RefreshTokenRepository";
+import AccountRepository from "../../repository/AccountRepository";
+import AccessTokenRepository from "../../repository/AccessTokenRepository";
+import RefreshTokenRepository from "../../repository/RefreshTokenRepository";
 
 class Login {
   constructor(
