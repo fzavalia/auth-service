@@ -1,14 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import AccountRepository from "../../repository/AccountRepository";
-import AccessTokenRepository from "../../repository/AccessTokenRepository";
-import RefreshTokenRepository from "../../repository/RefreshTokenRepository";
+import AccountRepository from "../repository/AccountRepository";
+import AccessTokenRepository from "../repository/AccessTokenRepository";
+import RefreshTokenRepository from "../repository/RefreshTokenRepository";
 
 class Login {
-  constructor(
-    private readonly accountRepository: AccountRepository,
-    private readonly tokenFactory: TokenFactory
-  ) {}
+  constructor(private readonly accountRepository: AccountRepository, private readonly tokenFactory: TokenFactory) {}
 
   exec = async (username: string, password: string) => {
     const account = await this.accountRepository.find(username);
@@ -16,10 +13,7 @@ class Login {
     return await this.tokenFactory.makeTokens(account.username);
   };
 
-  private validatePassword = async (
-    inputPassword: string,
-    accountPassword: string
-  ) => {
+  private validatePassword = async (inputPassword: string, accountPassword: string) => {
     const match = await bcrypt.compare(inputPassword, accountPassword);
     if (!match) {
       throw new Error();
@@ -30,7 +24,7 @@ class Login {
 class TokenFactory {
   constructor(
     private readonly atRepository: AccessTokenRepository,
-    private readonly rtRepository: RefreshTokenRepository
+    private readonly rtRepository: RefreshTokenRepository,
   ) {}
 
   makeTokens = async (accountUsername: string) => {
@@ -45,7 +39,7 @@ class TokenFactory {
     await this.atRepository.create({
       value: at,
       valid: true,
-      accountUsername: accountUsername
+      accountUsername: accountUsername,
     });
     return at;
   };
@@ -57,7 +51,7 @@ class TokenFactory {
       value: rt,
       valid: true,
       accountUsername: accountUsername,
-      accessTokenValue: accessToken
+      accessTokenValue: accessToken,
     });
     return rt;
   };
