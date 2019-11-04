@@ -1,0 +1,19 @@
+auth
+
+/login
+  - requests an access token with the provided credentials
+
+/refresh
+  - refreshes the access token providing a valid refresh token
+
+/activate
+  - should be used for email confirmation
+  - should contain the activation secret to activate successfuly 
+
+/register
+  - creates an unactivated account with a username and password
+  - activate it via the /activate 
+
+/validate
+  - asks if the access token is valid
+
