@@ -11,7 +11,8 @@ class Login {
     const account = await this.accountRepository.find(username);
     this.validateAccount(account);
     this.validatePassword(password, account.password);
-    return await this.tokenFactory.makeTokens(account.username);
+    const tokens = this.tokenFactory.makeTokens(account.username);
+    return tokens;
   };
 
   private validateAccount = (account: Account) => {
@@ -21,7 +22,7 @@ class Login {
   };
 
   private validatePassword = (inputPassword: string, accountPassword: string) => {
-    if (bcrypt.compareSync(inputPassword, accountPassword)) {
+    if (!bcrypt.compareSync(inputPassword, accountPassword)) {
       throw new LoginFailed();
     }
   };
