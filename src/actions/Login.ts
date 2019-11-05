@@ -35,37 +35,37 @@ class LoginFailed extends Error {
 
 export class TokenFactory {
   constructor(
-    private readonly atRepository: AccessTokenRepository,
-    private readonly rtRepository: RefreshTokenRepository,
+    private readonly accessTokenRepository: AccessTokenRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   makeTokens = async (accountUsername: string) => {
-    const at = await this.makeAccessToken(accountUsername);
-    const rt = await this.makeRefreshToken(accountUsername, at);
-    return { accessToken: at, refreshToken: rt };
+    const accessToken = await this.makeAccessToken(accountUsername);
+    const refreshToken = await this.makeRefreshToken(accountUsername, accessToken);
+    return { accessToken: accessToken, refreshToken: refreshToken };
   };
 
   makeAccessToken = async (accountUsername: string) => {
-    await this.atRepository.invalidateAllForAccount(accountUsername);
-    const at = uuid();
-    await this.atRepository.create({
-      value: at,
+    await this.accessTokenRepository.invalidateAllForAccount(accountUsername);
+    const accessToken = uuid();
+    await this.accessTokenRepository.create({
+      value: accessToken,
       valid: true,
       accountUsername: accountUsername,
     });
-    return at;
+    return accessToken;
   };
 
   makeRefreshToken = async (accountUsername: string, accessToken: string) => {
-    await this.rtRepository.invalidateAllForAccount(accountUsername);
-    const rt = uuid();
-    await this.rtRepository.create({
-      value: rt,
+    await this.refreshTokenRepository.invalidateAllForAccount(accountUsername);
+    const refreshToken = uuid();
+    await this.refreshTokenRepository.create({
+      value: refreshToken,
       valid: true,
       accountUsername: accountUsername,
       accessTokenValue: accessToken,
     });
-    return rt;
+    return refreshToken;
   };
 }
 
