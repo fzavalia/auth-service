@@ -1,5 +1,5 @@
 import RefreshTokenRepository, { RefreshToken } from "../repository/RefreshTokenRepository";
-import { TokenFactory } from "./Login";
+import TokenFactory from "../core/TokenFactory";
 
 class Refresh {
   constructor(

@@ -1,9 +1,9 @@
-import express, { Response, response } from "express";
-import bodyParser, { json } from "body-parser";
+import express, { Response } from "express";
+import bodyParser from "body-parser";
 import Register from "./actions/Register";
 import InMemoryAccountRepository from "./repository/inMemory/InMemoryAccountRepository";
 import InMemoryActivationSecretRepository from "./repository/inMemory/InMemoryActivationSecretRepository";
-import Login, { TokenFactory } from "./actions/Login";
+import Login from "./actions/Login";
 import InMemoryAccessTokenRepository from "./repository/inMemory/InMemoryAccessTokenRepository";
 import InMemoryRefreshTokenRepository from "./repository/inMemory/InMemoryRefreshTokenRepository";
 import Activate from "./actions/Activate";
@@ -13,6 +13,7 @@ import { Account } from "./repository/AccountRepository";
 import { ActivationSecret } from "./repository/ActivationSecretRepository";
 import { AccessToken } from "./repository/AccessTokenRepository";
 import { RefreshToken } from "./repository/RefreshTokenRepository";
+import TokenFactory from "./core/TokenFactory";
 
 interface DB {
   accounts: InMemoryRepositoryElements<Account>;
