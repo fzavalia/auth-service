@@ -20,7 +20,7 @@ class Refresh {
   };
 }
 
-class InvalidToken extends Error {
+export class InvalidToken extends Error {
   name = "InvalidToken";
   message = "The provided token is invalid";
 }

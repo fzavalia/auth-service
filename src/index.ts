@@ -14,6 +14,7 @@ import { ActivationSecret } from "./repository/ActivationSecretRepository";
 import { AccessToken } from "./repository/AccessTokenRepository";
 import { RefreshToken } from "./repository/RefreshTokenRepository";
 import TokenFactory from "./core/TokenFactory";
+import Authenticate from "./actions/Authenticate";
 
 interface DB {
   accounts: InMemoryRepositoryElements<Account>;
@@ -40,6 +41,7 @@ const register = new Register(accountRepository, activationSecretRepository).exe
 const login = new Login(accountRepository, tokenFactory).exec;
 const activate = new Activate(activationSecretRepository, accountRepository).exec;
 const refresh = new Refresh(refreshTokenRepository, tokenFactory).exec;
+const authenticate = new Authenticate(accessTokenRepository).exec;
 
 const makeCatchHandler = (res: Response) => (e: Error) => {
   const responseError = {
@@ -70,9 +72,9 @@ app.post("/refresh", (req, res) => {
     .catch(makeCatchHandler(res));
 });
 
-app.get("/activate", (req, res) => {
-  const secret = req.query.activationSecret;
-  activate(secret)
+app.post("/activate", (req, res) => {
+  const activationSecret = req.body.activationSecret;
+  activate(activationSecret)
     .then(() => res.send({ message: "Account Activated" }))
     .catch(makeCatchHandler(res));
 });
@@ -84,7 +86,12 @@ app.post("/register", (req, res) => {
     .catch(makeCatchHandler(res));
 });
 
-app.get("/validate");
+app.post("/authenticate", (req, res) => {
+  const accessToken = req.body.accessToken;
+  authenticate(accessToken)
+    .then(() => res.send({ status: "ok" }))
+    .catch(makeCatchHandler(res));
+});
 
 app.get("/repository", (_, res) => {
   res.send(JSON.stringify(db));
