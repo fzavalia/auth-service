@@ -5,11 +5,9 @@ export interface Account {
 }
 
 interface AccountRepository {
-  create: (account: Account) => Promise<void>;
-  update: (account: Account) => Promise<void>;
   find: (username: string) => Promise<Account>;
+  create: (account: Account) => Promise<void>;
+  activate: (username: string) => Promise<void>;
 }
-
-export class AccountNotFound extends Error {}
 
 export default AccountRepository;

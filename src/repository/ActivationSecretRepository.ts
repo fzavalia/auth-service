@@ -5,6 +5,8 @@ export interface ActivationSecret {
 }
 
 interface ActivationSecretRepository {
+  use: (value: string) => Promise<void>;
+  find: (value: string) => Promise<ActivationSecret>;
   create: (activationSecret: ActivationSecret) => Promise<void>;
 }
 

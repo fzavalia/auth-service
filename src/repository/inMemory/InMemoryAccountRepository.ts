@@ -1,15 +1,16 @@
-import AccountRepository, { Account, AccountNotFound } from "../AccountRepository";
-import InMemoryRepository from "./InMemoryRepository";
+import AccountRepository, { Account } from "../AccountRepository";
+import InMemoryRepository, { NotFound } from "./InMemoryRepository";
 
 class InMemoryAccountRepository extends InMemoryRepository<Account> implements AccountRepository {
   extractIndexFromElement = (e: Account) => e.username;
 
-  update = (account: Account) =>
+  activate: (username: string) => Promise<void> = username =>
     new Promise<void>((resolve, reject) => {
-      if (!this.elements[account.username]) {
-        reject(new AccountNotFound());
+      const e = this.elements[username];
+      if (!e) {
+        reject(new NotFound());
       } else {
-        this.elements[account.username] = account;
+        e.active = true;
         resolve();
       }
     });
