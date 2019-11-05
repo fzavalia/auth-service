@@ -36,6 +36,9 @@ class Register {
     });
 }
 
-class PasswordsDoNotMatch extends Error {}
+class PasswordsDoNotMatch extends Error {
+  name = "PasswordsDoNotMatch";
+  message = "The password and passwordConfirmation fields are not the same";
+}
 
 export default Register;

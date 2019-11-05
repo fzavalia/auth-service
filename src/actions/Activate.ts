@@ -1,5 +1,5 @@
-import ActivationSecretRepository from "../repository/ActivationSecretRepository";
-import AccountRepository from "../repository/AccountRepository";
+import ActivationSecretRepository, { ActivationSecret } from "../repository/ActivationSecretRepository";
+import AccountRepository, { Account } from "../repository/AccountRepository";
 
 class Activate {
   constructor(
@@ -7,11 +7,32 @@ class Activate {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  exec: (secret: string) => Promise<void> = async secret => {
-    const activationSecret = await this.activationSecretRepository.find(secret);
-    await this.activationSecretRepository.use(secret);
+  exec: (activationSecretValue: string) => Promise<void> = async activationSecretValue => {
+    const activationSecret = await this.activationSecretRepository.find(activationSecretValue);
+    this.validateActivationSecret(activationSecret);
+    const account = await this.accountRepository.find(activationSecret.accountUsername);
+    this.validateAccount(account);
+    await this.activationSecretRepository.use(activationSecretValue);
     await this.accountRepository.activate(activationSecret.accountUsername);
   };
+
+  private validateActivationSecret = (activationSecret: ActivationSecret) => {
+    if (activationSecret.used) {
+      throw new InvalidActivationSecret();
+    }
+  };
+
+  private validateAccount = (account: Account) => {
+    if (account.active) {
+      throw new InvalidActivationSecret();
+    }
+  };
+}
+
+class InvalidActivationSecret extends Error {
+  name = "InvalidActivationSecret";
+  message =
+    "The secret is invalid, it might have been used already, it might not exist or the account linked to it might have already been activated";
 }
 
 export default Activate;

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import uuid from "uuid/v4";
-import AccountRepository from "../repository/AccountRepository";
+import AccountRepository, { Account } from "../repository/AccountRepository";
 import AccessTokenRepository from "../repository/AccessTokenRepository";
 import RefreshTokenRepository from "../repository/RefreshTokenRepository";
 
@@ -9,19 +9,30 @@ class Login {
 
   exec = async (username: string, password: string) => {
     const account = await this.accountRepository.find(username);
-    await this.validatePassword(password, account.password);
+    this.validateAccount(account);
+    this.validatePassword(password, account.password);
     return await this.tokenFactory.makeTokens(account.username);
   };
 
-  private validatePassword = async (inputPassword: string, accountPassword: string) => {
-    const match = await bcrypt.compare(inputPassword, accountPassword);
-    if (!match) {
-      throw new Error();
+  private validateAccount = (account: Account) => {
+    if (!account.active) {
+      throw new LoginFailed();
+    }
+  };
+
+  private validatePassword = (inputPassword: string, accountPassword: string) => {
+    if (bcrypt.compareSync(inputPassword, accountPassword)) {
+      throw new LoginFailed();
     }
   };
 }
 
-class TokenFactory {
+class LoginFailed extends Error {
+  name = "LoginFailed";
+  message = "Could not login due to invalid username or password";
+}
+
+export class TokenFactory {
   constructor(
     private readonly atRepository: AccessTokenRepository,
     private readonly rtRepository: RefreshTokenRepository,
