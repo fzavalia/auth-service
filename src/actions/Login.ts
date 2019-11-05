@@ -11,8 +11,7 @@ class Login {
     const account = await this.accountRepository.find(username);
     this.validateAccount(account);
     this.validatePassword(password, account.password);
-    const tokens = this.tokenFactory.makeTokens(account.username);
-    return tokens;
+    return await this.tokenFactory.makeTokens(account.username);
   };
 
   private validateAccount = (account: Account) => {
