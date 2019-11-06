@@ -2,6 +2,7 @@ export interface AccessToken {
   value: string;
   valid: boolean;
   accountUsername: string;
+  expiration: Date;
 }
 
 interface AccessTokenRepository {

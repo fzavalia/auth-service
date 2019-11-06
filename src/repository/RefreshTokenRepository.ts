@@ -3,6 +3,7 @@ export interface RefreshToken {
   valid: boolean;
   accountUsername: string;
   accessTokenValue: string;
+  expiration: Date
 }
 
 interface RefreshTokenRepository {

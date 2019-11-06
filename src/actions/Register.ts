@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import AccountRepository from "../repository/AccountRepository";
 import uuid from "uuid/v4";
 import ActivationSecretRepository from "../repository/ActivationSecretRepository";
+import { addDays } from "date-fns";
 
 class Register {
   constructor(
@@ -22,6 +23,7 @@ class Register {
       accountUsername: username,
       value: activationSecret,
       used: false,
+      expiration: addDays(new Date(), 1),
     });
     return activationSecret;
   };

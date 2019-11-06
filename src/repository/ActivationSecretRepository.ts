@@ -2,6 +2,7 @@ export interface ActivationSecret {
   value: string;
   used: boolean;
   accountUsername: string;
+  expiration: Date;
 }
 
 interface ActivationSecretRepository {

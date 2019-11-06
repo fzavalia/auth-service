@@ -1,6 +1,7 @@
 import uuid from "uuid/v4";
 import AccessTokenRepository from "../repository/AccessTokenRepository";
 import RefreshTokenRepository from "../repository/RefreshTokenRepository";
+import { addMinutes, addDays } from "date-fns";
 
 class TokenFactory {
   constructor(
@@ -21,6 +22,7 @@ class TokenFactory {
       value: accessToken,
       valid: true,
       accountUsername: accountUsername,
+      expiration: addMinutes(new Date(), 30),
     });
     return accessToken;
   };
@@ -33,6 +35,7 @@ class TokenFactory {
       valid: true,
       accountUsername: accountUsername,
       accessTokenValue: accessToken,
+      expiration: addDays(new Date(), 7),
     });
     return refreshToken;
   };
