@@ -1,12 +1,14 @@
 import uuid from "uuid/v4";
 import AccessTokenRepository from "../repository/AccessTokenRepository";
 import RefreshTokenRepository from "../repository/RefreshTokenRepository";
-import { addMinutes, addDays } from "date-fns";
+import { addMinutes } from "date-fns";
 
 class TokenFactory {
   constructor(
     private readonly accessTokenRepository: AccessTokenRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
+    private readonly accessTokenExpiration: number,
+    private readonly refreshTokenExpiration: number,
   ) {}
 
   makeTokens = async (accountUsername: string) => {
@@ -22,7 +24,7 @@ class TokenFactory {
       value: accessToken,
       valid: true,
       accountUsername: accountUsername,
-      expiration: addMinutes(new Date(), 30),
+      expiration: addMinutes(new Date(), this.accessTokenExpiration),
     });
     return accessToken;
   };
@@ -35,7 +37,7 @@ class TokenFactory {
       valid: true,
       accountUsername: accountUsername,
       accessTokenValue: accessToken,
-      expiration: addDays(new Date(), 7),
+      expiration: addMinutes(new Date(), this.refreshTokenExpiration),
     });
     return refreshToken;
   };

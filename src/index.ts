@@ -15,6 +15,7 @@ import { AccessToken } from "./repository/AccessTokenRepository";
 import { RefreshToken } from "./repository/RefreshTokenRepository";
 import TokenFactory from "./core/TokenFactory";
 import Authenticate from "./actions/Authenticate";
+import * as config from "./config";
 
 interface DB {
   accounts: InMemoryRepositoryElements<Account>;
@@ -35,9 +36,14 @@ const activationSecretRepository = new InMemoryActivationSecretRepository(db.act
 const accessTokenRepository = new InMemoryAccessTokenRepository(db.accessTokens);
 const refreshTokenRepository = new InMemoryRefreshTokenRepository(db.refreshTokens);
 
-const tokenFactory = new TokenFactory(accessTokenRepository, refreshTokenRepository);
+const tokenFactory = new TokenFactory(
+  accessTokenRepository,
+  refreshTokenRepository,
+  config.accessTokenExpiration,
+  config.refreshTokenExpiration,
+);
 
-const register = new Register(accountRepository, activationSecretRepository).exec;
+const register = new Register(accountRepository, activationSecretRepository, config.activationSecretExpiration).exec;
 const login = new Login(accountRepository, tokenFactory).exec;
 const activate = new Activate(activationSecretRepository, accountRepository).exec;
 const refresh = new Refresh(refreshTokenRepository, tokenFactory).exec;

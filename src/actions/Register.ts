@@ -2,12 +2,13 @@ import bcrypt from "bcrypt";
 import AccountRepository from "../repository/AccountRepository";
 import uuid from "uuid/v4";
 import ActivationSecretRepository from "../repository/ActivationSecretRepository";
-import { addDays } from "date-fns";
+import { addMinutes } from "date-fns";
 
 class Register {
   constructor(
     private readonly accountRepository: AccountRepository,
     private readonly activationSecretRepository: ActivationSecretRepository,
+    private readonly activationSecretExpiration: number,
   ) {}
 
   exec: (username: string, password: string, passwordConfirmation: string) => Promise<string> = async (
@@ -23,7 +24,7 @@ class Register {
       accountUsername: username,
       value: activationSecret,
       used: false,
-      expiration: addDays(new Date(), 1),
+      expiration: addMinutes(new Date(), this.activationSecretExpiration),
     });
     return activationSecret;
   };
