@@ -1,40 +1,23 @@
 import express, { Response } from "express";
 import bodyParser from "body-parser";
-import Register from "./actions/Register";
-import InMemoryAccountRepository from "./repository/inMemory/InMemoryAccountRepository";
-import InMemoryActivationSecretRepository from "./repository/inMemory/InMemoryActivationSecretRepository";
-import Login from "./actions/Login";
-import InMemoryAccessTokenRepository from "./repository/inMemory/InMemoryAccessTokenRepository";
-import InMemoryRefreshTokenRepository from "./repository/inMemory/InMemoryRefreshTokenRepository";
-import Activate from "./actions/Activate";
-import Refresh from "./actions/Refresh";
-import { InMemoryRepositoryElements } from "./repository/inMemory/InMemoryRepository";
-import { Account } from "./repository/AccountRepository";
-import { ActivationSecret } from "./repository/ActivationSecretRepository";
-import { AccessToken } from "./repository/AccessTokenRepository";
-import { RefreshToken } from "./repository/RefreshTokenRepository";
 import TokenFactory from "./core/TokenFactory";
-import Authenticate from "./actions/Authenticate";
 import * as config from "./config";
+import makeActions from "./makeActions";
+import makeRepositories, { InMemoryDB } from "./makeRepositories";
 
-interface DB {
-  accounts: InMemoryRepositoryElements<Account>;
-  activationSecrets: InMemoryRepositoryElements<ActivationSecret>;
-  accessTokens: InMemoryRepositoryElements<AccessToken>;
-  refreshTokens: InMemoryRepositoryElements<RefreshToken>;
-}
-
-const db: DB = {
+const db: InMemoryDB = {
   accounts: {},
   activationSecrets: {},
   accessTokens: {},
   refreshTokens: {},
 };
 
-const accountRepository = new InMemoryAccountRepository(db.accounts);
-const activationSecretRepository = new InMemoryActivationSecretRepository(db.activationSecrets);
-const accessTokenRepository = new InMemoryAccessTokenRepository(db.accessTokens);
-const refreshTokenRepository = new InMemoryRefreshTokenRepository(db.refreshTokens);
+const {
+  accountRepository,
+  activationSecretRepository,
+  accessTokenRepository,
+  refreshTokenRepository,
+} = makeRepositories.inMemory(db);
 
 const tokenFactory = new TokenFactory(
   accessTokenRepository,
@@ -43,11 +26,14 @@ const tokenFactory = new TokenFactory(
   config.refreshTokenExpiration,
 );
 
-const register = new Register(accountRepository, activationSecretRepository, config.activationSecretExpiration).exec;
-const login = new Login(accountRepository, tokenFactory).exec;
-const activate = new Activate(activationSecretRepository, accountRepository).exec;
-const refresh = new Refresh(refreshTokenRepository, tokenFactory).exec;
-const authenticate = new Authenticate(accessTokenRepository).exec;
+const { activate, authenticate, login, refresh, register } = makeActions({
+  accessTokenRepository,
+  accountRepository,
+  activationSecretRepository,
+  refreshTokenRepository,
+  tokenFactory,
+  activationSecretExpiration: config.activationSecretExpiration,
+});
 
 const makeCatchHandler = (res: Response) => (e: Error) => {
   const responseError = {
