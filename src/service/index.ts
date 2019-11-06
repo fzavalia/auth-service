@@ -1,6 +1,6 @@
 import express, { Response } from "express";
 import bodyParser from "body-parser";
-import TokenFactory from "./core/TokenFactory";
+import TokenFactory from "../core/TokenFactory";
 import * as config from "./config";
 import makeActions from "./makeActions";
 import makeRepositories, { InMemoryDB } from "./makeRepositories";

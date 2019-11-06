@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "npx tsc && node build/index.js"
+    "start": "rimraf build && npx tsc && node build/service/index.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.21",
     "jest": "^24.9.0",
+    "rimraf": "^3.0.0",
     "ts-jest": "^24.1.0",
     "typescript": "^3.6.4"
   },
