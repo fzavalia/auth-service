@@ -1,5 +1,6 @@
 import AccessTokenRepository, { AccessToken } from "../repository/AccessTokenRepository";
 import { InvalidToken } from "./Refresh";
+import { isBefore } from "date-fns";
 
 class Authenticate {
   constructor(private readonly accessTokenRepository: AccessTokenRepository) {}
@@ -10,7 +11,9 @@ class Authenticate {
   };
 
   private validateAccessToken = (accessToken: AccessToken) => {
-    if (!accessToken.valid) {
+    const isExpired = isBefore(accessToken.expiration, new Date());
+    const isInvalidated = !accessToken.valid;
+    if (isExpired || isInvalidated) {
       throw new InvalidToken();
     }
   };

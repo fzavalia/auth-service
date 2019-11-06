@@ -1,5 +1,6 @@
 import ActivationSecretRepository, { ActivationSecret } from "../repository/ActivationSecretRepository";
 import AccountRepository, { Account } from "../repository/AccountRepository";
+import { isBefore } from "date-fns";
 
 class Activate {
   constructor(
@@ -17,7 +18,9 @@ class Activate {
   };
 
   private validateActivationSecret = (activationSecret: ActivationSecret) => {
-    if (activationSecret.used) {
+    const isExpired = isBefore(activationSecret.expiration, new Date());
+    const isUsed = activationSecret.used;
+    if (isExpired || isUsed) {
       throw new InvalidActivationSecret();
     }
   };

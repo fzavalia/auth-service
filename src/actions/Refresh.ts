@@ -1,5 +1,6 @@
 import RefreshTokenRepository, { RefreshToken } from "../repository/RefreshTokenRepository";
 import TokenFactory from "../core/TokenFactory";
+import { isBefore } from "date-fns";
 
 class Refresh {
   constructor(
@@ -14,7 +15,10 @@ class Refresh {
   };
 
   private validateRefreshToken = (refreshToken: RefreshToken, accessTokenValue: string) => {
-    if (!refreshToken.valid || refreshToken.accessTokenValue !== accessTokenValue) {
+    const isExpired = isBefore(refreshToken.expiration, new Date());
+    const isInvalidated = !refreshToken.valid;
+    const isNotForAccessToken = refreshToken.accessTokenValue !== accessTokenValue;
+    if (isExpired || isInvalidated || isNotForAccessToken) {
       throw new InvalidToken();
     }
   };
