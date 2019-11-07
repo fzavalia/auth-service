@@ -1,9 +1,14 @@
-import bcrypt from "bcrypt";
 import AccountRepository, { Account } from "../repository/AccountRepository";
 import TokenFactory from "../core/TokenFactory";
+import CustomError from "../core/CustomError";
+import PasswordResolver from "../core/PasswordResolver";
 
 class Login {
-  constructor(private readonly accountRepository: AccountRepository, private readonly tokenFactory: TokenFactory) {}
+  constructor(
+    private readonly accountRepository: AccountRepository,
+    private readonly tokenFactory: TokenFactory,
+    private readonly passwordResolver: PasswordResolver,
+  ) {}
 
   exec = async (username: string, password: string) => {
     const account = await this.accountRepository.find(username);
@@ -14,20 +19,19 @@ class Login {
 
   private validateAccount = (account: Account) => {
     if (!account.active) {
-      throw new LoginFailed();
+      throw new InactiveAccount();
     }
   };
 
   private validatePassword = (inputPassword: string, accountPassword: string) => {
-    if (!bcrypt.compareSync(inputPassword, accountPassword)) {
-      throw new LoginFailed();
+    if (!this.passwordResolver.compare(inputPassword, accountPassword)) {
+      throw new InvalidPassword();
     }
   };
 }
 
-class LoginFailed extends Error {
-  name = "LoginFailed";
-  message = "Could not login due to invalid username or password";
-}
+export class InactiveAccount extends CustomError {}
+
+export class InvalidPassword extends CustomError {}
 
 export default Login;

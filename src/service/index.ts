@@ -4,6 +4,7 @@ import TokenFactory from "../core/TokenFactory";
 import * as config from "./config";
 import makeActions from "./makeActions";
 import makeRepositories, { InMemoryDB } from "./makeRepositories";
+import { BcryptPasswordResolver } from "../core/PasswordResolver";
 
 const db: InMemoryDB = {
   accounts: {},
@@ -33,6 +34,7 @@ const { activate, authenticate, login, refresh, register } = makeActions({
   refreshTokenRepository,
   tokenFactory,
   activationSecretExpiration: config.activationSecretExpiration,
+  passwordResolver: new BcryptPasswordResolver(),
 });
 
 const makeCatchHandler = (res: Response) => (e: Error) => {

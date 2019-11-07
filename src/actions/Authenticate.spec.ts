@@ -1,10 +1,10 @@
 import Authenticate, { InvalidAccessToken, ExpiredAccessToken } from "./Authenticate";
 import InMemoryAccessTokenRepository from "../repository/inMemory/InMemoryAccessTokenRepository";
 import { addDays, subDays } from "date-fns";
-import { validateError, makeRepositoryDataMerge } from "../utils/testUtils";
+import { validateError, makeMergeRepositoryDataFunction } from "../utils/testUtils";
 import { NotFound } from "../repository/inMemory/InMemoryRepository";
 
-const repositoryDataMerge = makeRepositoryDataMerge({
+const repositoryDataMerge = makeMergeRepositoryDataFunction({
   value: {
     accountUsername: "username",
     expiration: addDays(new Date(), 10),

@@ -2,10 +2,10 @@ import InMemoryActivationSecretRepository from "../repository/inMemory/InMemoryA
 import Activate, { UsedActivationSecret, AccountAlreadyActive, ExpiredActivationSecret } from "./Activate";
 import InMemoryAccountRepository from "../repository/inMemory/InMemoryAccountRepository";
 import { addDays, subDays } from "date-fns";
-import { makeRepositoryDataMerge, validateError } from "../utils/testUtils";
+import { makeMergeRepositoryDataFunction, validateError } from "../utils/testUtils";
 import { NotFound } from "../repository/inMemory/InMemoryRepository";
 
-const activationSecretRepoDataMerge = makeRepositoryDataMerge({
+const activationSecretRepoDataMerge = makeMergeRepositoryDataFunction({
   value: {
     value: "value",
     accountUsername: "username",
@@ -14,7 +14,7 @@ const activationSecretRepoDataMerge = makeRepositoryDataMerge({
   },
 });
 
-const accountRepoDataMerge = makeRepositoryDataMerge({
+const accountRepoDataMerge = makeMergeRepositoryDataFunction({
   username: {
     username: "username",
     active: false,
@@ -22,17 +22,17 @@ const accountRepoDataMerge = makeRepositoryDataMerge({
   },
 });
 
-const makeActivate = (opts?: { activationSecretRepoMergeData?: any; accountRepoMergeData?: any }) => {
-  const activationSecretRepoData = activationSecretRepoDataMerge(opts ? opts.activationSecretRepoMergeData : undefined);
+const makeActivate = (opts: { activationSecretRepoMergeData?: any; accountRepoMergeData?: any }) => {
+  const activationSecretRepoData = activationSecretRepoDataMerge(opts.activationSecretRepoMergeData);
   const activationSecretRepo = new InMemoryActivationSecretRepository(activationSecretRepoData);
-  const accountRepoData = accountRepoDataMerge(opts ? opts.accountRepoMergeData : undefined);
+  const accountRepoData = accountRepoDataMerge(opts.accountRepoMergeData);
   const accountRepo = new InMemoryAccountRepository(accountRepoData);
   return new Activate(activationSecretRepo, accountRepo).exec;
 };
 
 describe("Activate", () => {
   it("activates successfuly", async () => {
-    await makeActivate()("value");
+    await makeActivate({})("value");
   });
 
   it("fails when activation secret does not exist", async () => {
