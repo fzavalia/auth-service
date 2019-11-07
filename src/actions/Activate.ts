@@ -1,6 +1,7 @@
 import ActivationSecretRepository, { ActivationSecret } from "../repository/ActivationSecretRepository";
 import AccountRepository, { Account } from "../repository/AccountRepository";
 import { isBefore } from "date-fns";
+import CustomError from "../core/CustomError";
 
 class Activate {
   constructor(
@@ -18,24 +19,25 @@ class Activate {
   };
 
   private validateActivationSecret = (activationSecret: ActivationSecret) => {
-    const isExpired = isBefore(activationSecret.expiration, new Date());
-    const isUsed = activationSecret.used;
-    if (isExpired || isUsed) {
-      throw new InvalidActivationSecret();
+    if (isBefore(activationSecret.expiration, new Date())) {
+      throw new ExpiredActivationSecret();
+    }
+    if (activationSecret.used) {
+      throw new UsedActivationSecret();
     }
   };
 
   private validateAccount = (account: Account) => {
     if (account.active) {
-      throw new InvalidActivationSecret();
+      throw new AccountAlreadyActive();
     }
   };
 }
 
-class InvalidActivationSecret extends Error {
-  name = "InvalidActivationSecret";
-  message =
-    "The secret is invalid, it might have been used already, it might not exist or the account linked to it might have already been activated";
-}
+export class ExpiredActivationSecret extends CustomError {}
+
+export class UsedActivationSecret extends CustomError {}
+
+export class AccountAlreadyActive extends CustomError {}
 
 export default Activate;
