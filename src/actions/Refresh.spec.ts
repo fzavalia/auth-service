@@ -1,10 +1,9 @@
 import InMemoryAccessTokenRepository from "../repository/inMemory/InMemoryAccessTokenRepository";
 import { validateError, makeMergeRepositoryDataFunction } from "../utils/testUtils";
 import { NotFound } from "../repository/inMemory/InMemoryRepository";
-import { InvalidPassword } from "./Login";
 import TokenFactory from "../core/TokenFactory";
 import InMemoryRefreshTokenRepository from "../repository/inMemory/InMemoryRefreshTokenRepository";
-import Refresh, { ExpiredRefreshToken } from "./Refresh";
+import Refresh from "./Refresh";
 import { addDays, subDays } from "date-fns";
 
 const makeRefresh = (mergeableAccessTokensData: any, mergeableRefreshTokensData: any) => {
@@ -39,22 +38,4 @@ describe("Refresh", () => {
       validateError(e, new NotFound());
     }
   });
-
-  // it("fails when refresh token is expired", async () => {
-  //   const login = makeRefresh({}, {});
-  //   try {
-  //     await login("unexistent", "password");
-  //   } catch (e) {
-  //     validateError(e, new Error());
-  //   }
-  // });
-
-  // it("fails when password is invalid", async () => {
-  //   const login = makeRefresh({}, {});
-  //   try {
-  //     await login("username", "invalid");
-  //   } catch (e) {
-  //     validateError(e, new InvalidPassword());
-  //   }
-  // });
 });

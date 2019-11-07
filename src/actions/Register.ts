@@ -3,11 +3,14 @@ import AccountRepository from "../repository/AccountRepository";
 import uuid from "uuid/v4";
 import ActivationSecretRepository from "../repository/ActivationSecretRepository";
 import { addMinutes } from "date-fns";
+import CustomError from "../core/CustomError";
+import PasswordResolver from "../core/PasswordResolver";
 
 class Register {
   constructor(
     private readonly accountRepository: AccountRepository,
     private readonly activationSecretRepository: ActivationSecretRepository,
+    private readonly passwordResolver: PasswordResolver,
     private readonly activationSecretExpiration: number,
   ) {}
 
@@ -17,7 +20,7 @@ class Register {
     passwordConfirmation,
   ) => {
     await this.validatePasswords(password, passwordConfirmation);
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = this.passwordResolver.encrypt(password);
     await this.accountRepository.create({ username, password: hashedPassword, active: false });
     const activationSecret = uuid();
     await this.activationSecretRepository.create({
@@ -39,9 +42,8 @@ class Register {
     });
 }
 
-class PasswordsDoNotMatch extends Error {
+export class PasswordsDoNotMatch extends CustomError {
   name = "PasswordsDoNotMatch";
-  message = "The password and passwordConfirmation fields are not the same";
 }
 
 export default Register;

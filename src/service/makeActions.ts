@@ -23,5 +23,10 @@ export default (deps: {
   activate: new Activate(deps.activationSecretRepository, deps.accountRepository).exec,
   refresh: new Refresh(deps.refreshTokenRepository, deps.tokenFactory).exec,
   login: new Login(deps.accountRepository, deps.tokenFactory, deps.passwordResolver).exec,
-  register: new Register(deps.accountRepository, deps.activationSecretRepository, deps.activationSecretExpiration).exec,
+  register: new Register(
+    deps.accountRepository,
+    deps.activationSecretRepository,
+    deps.passwordResolver,
+    deps.activationSecretExpiration,
+  ).exec,
 });
