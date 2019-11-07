@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
+    "test:coverage": "npm run test -- --coverage",
     "start": "rimraf build && npx tsc && node build/service/index.js"
   },
   "keywords": [],
