@@ -4,6 +4,7 @@ import InMemoryAccountRepository from "../repository/inMemory/InMemoryAccountRep
 import { addDays, subDays } from "date-fns";
 import CustomError from "../core/CustomError";
 import { makeRepositoryDataMerge, validateError } from "../utils/testUtils";
+import { NotFound } from "../repository/inMemory/InMemoryRepository";
 
 const activationSecretRepoDataMerge = makeRepositoryDataMerge({
   value: {
@@ -22,7 +23,7 @@ const accountRepoDataMerge = makeRepositoryDataMerge({
   },
 });
 
-const makeAction = (opts?: { activationSecretRepoMergeData?: any; accountRepoMergeData?: any }) => {
+const makeActivate = (opts?: { activationSecretRepoMergeData?: any; accountRepoMergeData?: any }) => {
   const activationSecretRepoData = activationSecretRepoDataMerge(opts ? opts.activationSecretRepoMergeData : undefined);
   const activationSecretRepo = new InMemoryActivationSecretRepository(activationSecretRepoData);
   const accountRepoData = accountRepoDataMerge(opts ? opts.accountRepoMergeData : undefined);
@@ -32,11 +33,20 @@ const makeAction = (opts?: { activationSecretRepoMergeData?: any; accountRepoMer
 
 describe("Activate", () => {
   it("activates successfuly", async () => {
-    await makeAction()("value");
+    await makeActivate()("value");
+  });
+
+  it("fails when activation secret does not exist", async () => {
+    const activate = makeActivate({ activationSecretRepoMergeData: { value: { used: true } } });
+    try {
+      await activate("other");
+    } catch (e) {
+      validateError(e, new NotFound());
+    }
   });
 
   it("fails when activation secret was already used", async () => {
-    const activate = makeAction({ activationSecretRepoMergeData: { value: { used: true } } });
+    const activate = makeActivate({ activationSecretRepoMergeData: { value: { used: true } } });
     try {
       await activate("value");
     } catch (e) {
@@ -45,7 +55,7 @@ describe("Activate", () => {
   });
 
   it("fails when account was already activated", async () => {
-    const activate = makeAction({ accountRepoMergeData: { username: { active: true } } });
+    const activate = makeActivate({ accountRepoMergeData: { username: { active: true } } });
     try {
       await activate("value");
     } catch (e) {
@@ -54,7 +64,7 @@ describe("Activate", () => {
   });
 
   it("fails when activation secret is expired", async () => {
-    const activate = makeAction({
+    const activate = makeActivate({
       activationSecretRepoMergeData: {
         value: { expiration: subDays(new Date(), 10) },
       },

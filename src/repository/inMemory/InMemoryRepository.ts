@@ -1,3 +1,5 @@
+import CustomError from "../../core/CustomError";
+
 export interface InMemoryRepositoryElements<T> {
   [key: string]: T;
 }
@@ -29,10 +31,7 @@ abstract class InMemoryRepository<T> {
     });
 }
 
-export class NotFound extends Error {
-  name = "NotFound";
-  message = "Element not found";
-}
+export class NotFound extends CustomError {}
 
 export class AlreadyExists extends Error {
   name = "AlreadyExists";

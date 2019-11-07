@@ -2,6 +2,7 @@ import Authenticate, { InvalidAccessToken, ExpiredAccessToken } from "./Authenti
 import InMemoryAccessTokenRepository from "../repository/inMemory/InMemoryAccessTokenRepository";
 import { addDays, subDays } from "date-fns";
 import { validateError, makeRepositoryDataMerge } from "../utils/testUtils";
+import { NotFound } from "../repository/inMemory/InMemoryRepository";
 
 const repositoryDataMerge = makeRepositoryDataMerge({
   value: {
@@ -15,9 +16,18 @@ const repositoryDataMerge = makeRepositoryDataMerge({
 const makeAuthenticate = (mergeableRepoData: any) =>
   new Authenticate(new InMemoryAccessTokenRepository(repositoryDataMerge(mergeableRepoData))).exec;
 
-describe("Acuthenticate", () => {
+describe("Authenticate", () => {
   it("succeeds", async () => {
     await makeAuthenticate({})("value");
+  });
+
+  it("fails when access token does not exist", async () => {
+    const authenticate = makeAuthenticate({ value: { valid: false } });
+    try {
+      await authenticate("unexistent");
+    } catch (e) {
+      validateError(e, new NotFound());
+    }
   });
 
   it("fails when access token is invalid", async () => {
