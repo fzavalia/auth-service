@@ -2,49 +2,32 @@ import InMemoryActivationSecretRepository from "../repository/inMemory/InMemoryA
 import Activate, { UsedActivationSecret, AccountAlreadyActive, ExpiredActivationSecret } from "./Activate";
 import InMemoryAccountRepository from "../repository/inMemory/InMemoryAccountRepository";
 import { addDays, subDays } from "date-fns";
-import { InMemoryRepositoryElements } from "../repository/inMemory/InMemoryRepository";
-import { ActivationSecret } from "../repository/ActivationSecretRepository";
-import { Account } from "../repository/AccountRepository";
 import CustomError from "../core/CustomError";
+import { makeRepositoryDataMerge, validateError } from "../utils/testUtils";
 
-const makeActivationSecretRepositoryData = (merge?: any) => {
-  const original: InMemoryRepositoryElements<ActivationSecret> = {
-    value: {
-      value: "value",
-      accountUsername: "username",
-      expiration: addDays(new Date(), 1),
-      used: false,
-    },
-  };
-  return Object.assign(original, merge) as InMemoryRepositoryElements<ActivationSecret>;
-};
+const activationSecretRepoDataMerge = makeRepositoryDataMerge({
+  value: {
+    value: "value",
+    accountUsername: "username",
+    expiration: addDays(new Date(), 1),
+    used: false,
+  },
+});
 
-const makeAccountRepositoryData = (merge?: any) => {
-  const original: InMemoryRepositoryElements<Account> = {
-    username: {
-      username: "username",
-      active: false,
-      password: "password",
-    },
-  };
-  return Object.assign(original, merge) as InMemoryRepositoryElements<Account>;
-};
+const accountRepoDataMerge = makeRepositoryDataMerge({
+  username: {
+    username: "username",
+    active: false,
+    password: "password",
+  },
+});
 
 const makeAction = (opts?: { activationSecretRepoMergeData?: any; accountRepoMergeData?: any }) => {
-  const activationSecretRepoData = makeActivationSecretRepositoryData(
-    opts ? opts.activationSecretRepoMergeData : undefined,
-  );
+  const activationSecretRepoData = activationSecretRepoDataMerge(opts ? opts.activationSecretRepoMergeData : undefined);
   const activationSecretRepo = new InMemoryActivationSecretRepository(activationSecretRepoData);
-  const accountRepoData = makeAccountRepositoryData(opts ? opts.accountRepoMergeData : undefined);
+  const accountRepoData = accountRepoDataMerge(opts ? opts.accountRepoMergeData : undefined);
   const accountRepo = new InMemoryAccountRepository(accountRepoData);
   return new Activate(activationSecretRepo, accountRepo).exec;
-};
-
-const validateError = (catchedError: any, customError: CustomError) => {
-  const err: Error = catchedError;
-  if (err.name !== customError.name) {
-    throw new Error();
-  }
 };
 
 describe("Activate", () => {
