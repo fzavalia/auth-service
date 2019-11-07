@@ -2,7 +2,6 @@ import InMemoryActivationSecretRepository from "../repository/inMemory/InMemoryA
 import Activate, { UsedActivationSecret, AccountAlreadyActive, ExpiredActivationSecret } from "./Activate";
 import InMemoryAccountRepository from "../repository/inMemory/InMemoryAccountRepository";
 import { addDays, subDays } from "date-fns";
-import CustomError from "../core/CustomError";
 import { makeRepositoryDataMerge, validateError } from "../utils/testUtils";
 import { NotFound } from "../repository/inMemory/InMemoryRepository";
 
