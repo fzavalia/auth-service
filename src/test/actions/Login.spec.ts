@@ -1,11 +1,11 @@
-import InMemoryAccessTokenRepository from "../repository/inMemory/InMemoryAccessTokenRepository";
-import { validateError, makeMergeRepositoryDataFunction } from "../utils/testUtils";
-import { NotFound } from "../repository/inMemory/InMemoryRepository";
-import Login, { InvalidPassword, InactiveAccount } from "./Login";
-import InMemoryAccountRepository from "../repository/inMemory/InMemoryAccountRepository";
-import TokenFactory from "../core/TokenFactory";
-import InMemoryRefreshTokenRepository from "../repository/inMemory/InMemoryRefreshTokenRepository";
-import { StubPasswordResolver } from "../core/PasswordResolver";
+import InMemoryAccessTokenRepository from "../../repository/inMemory/InMemoryAccessTokenRepository";
+import { validateError, makeMergeRepositoryDataFunction } from "../../utils/testUtils";
+import { NotFound } from "../../repository/inMemory/InMemoryRepository";
+import Login, { InvalidPassword, InactiveAccount } from "../../actions/Login";
+import InMemoryAccountRepository from "../../repository/inMemory/InMemoryAccountRepository";
+import TokenFactory from "../../core/TokenFactory";
+import InMemoryRefreshTokenRepository from "../../repository/inMemory/InMemoryRefreshTokenRepository";
+import { StubPasswordResolver } from "../../core/PasswordResolver";
 
 const makeLogin = (mergeableRepoData: any) => {
   const mergeRepositoryData = makeMergeRepositoryDataFunction({

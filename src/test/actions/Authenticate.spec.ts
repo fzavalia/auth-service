@@ -1,8 +1,8 @@
-import Authenticate, { InvalidAccessToken, ExpiredAccessToken } from "./Authenticate";
-import InMemoryAccessTokenRepository from "../repository/inMemory/InMemoryAccessTokenRepository";
+import Authenticate, { InvalidAccessToken, ExpiredAccessToken } from "../../actions/Authenticate";
+import InMemoryAccessTokenRepository from "../../repository/inMemory/InMemoryAccessTokenRepository";
 import { addDays, subDays } from "date-fns";
-import { validateError, makeMergeRepositoryDataFunction } from "../utils/testUtils";
-import { NotFound } from "../repository/inMemory/InMemoryRepository";
+import { validateError, makeMergeRepositoryDataFunction } from "../../utils/testUtils";
+import { NotFound } from "../../repository/inMemory/InMemoryRepository";
 
 const repositoryDataMerge = makeMergeRepositoryDataFunction({
   value: {

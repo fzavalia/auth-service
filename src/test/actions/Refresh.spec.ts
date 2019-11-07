@@ -1,9 +1,9 @@
-import InMemoryAccessTokenRepository from "../repository/inMemory/InMemoryAccessTokenRepository";
-import { validateError, makeMergeRepositoryDataFunction } from "../utils/testUtils";
-import { NotFound } from "../repository/inMemory/InMemoryRepository";
-import TokenFactory from "../core/TokenFactory";
-import InMemoryRefreshTokenRepository from "../repository/inMemory/InMemoryRefreshTokenRepository";
-import Refresh from "./Refresh";
+import InMemoryAccessTokenRepository from "../../repository/inMemory/InMemoryAccessTokenRepository";
+import { validateError, makeMergeRepositoryDataFunction } from "../../utils/testUtils";
+import { NotFound } from "../../repository/inMemory/InMemoryRepository";
+import TokenFactory from "../../core/TokenFactory";
+import InMemoryRefreshTokenRepository from "../../repository/inMemory/InMemoryRefreshTokenRepository";
+import Refresh from "../../actions/Refresh";
 import { addDays, subDays } from "date-fns";
 
 const makeRefresh = (mergeableAccessTokensData: any, mergeableRefreshTokensData: any) => {
