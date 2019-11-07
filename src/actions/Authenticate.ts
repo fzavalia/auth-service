@@ -20,8 +20,12 @@ class Authenticate {
   };
 }
 
-export class ExpiredAccessToken extends CustomError {}
+export class ExpiredAccessToken extends CustomError {
+  name = "ExpiredAccessToken";
+}
 
-export class InvalidAccessToken extends CustomError {}
+export class InvalidAccessToken extends CustomError {
+  name = "InvalidAccessToken";
+}
 
 export default Authenticate;

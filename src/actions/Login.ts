@@ -30,8 +30,12 @@ class Login {
   };
 }
 
-export class InactiveAccount extends CustomError {}
+export class InactiveAccount extends CustomError {
+  name = "InactiveAccount";
+}
 
-export class InvalidPassword extends CustomError {}
+export class InvalidPassword extends CustomError {
+  name = "InvalidPassword";
+}
 
 export default Login;

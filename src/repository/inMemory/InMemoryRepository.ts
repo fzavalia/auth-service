@@ -31,11 +31,12 @@ abstract class InMemoryRepository<T> {
     });
 }
 
-export class NotFound extends CustomError {}
+export class NotFound extends CustomError {
+  name = "NotFound";
+}
 
-export class AlreadyExists extends Error {
+export class AlreadyExists extends CustomError {
   name = "AlreadyExists";
-  message = "Element already exists";
 }
 
 export default InMemoryRepository;

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "start": "rimraf build && npx tsc && node build/service/index.js"
   },
   "keywords": [],
@@ -21,11 +21,13 @@
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.2",
+    "@types/lodash": "^4.14.145",
     "@types/uuid": "^3.4.6",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "date-fns": "^2.6.0",
     "express": "^4.17.1",
+    "lodash": "^4.17.15",
     "uuid": "^3.3.3"
   }
 }

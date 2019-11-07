@@ -1,6 +1,7 @@
 import RefreshTokenRepository, { RefreshToken } from "../repository/RefreshTokenRepository";
 import TokenFactory from "../core/TokenFactory";
 import { isBefore } from "date-fns";
+import CustomError from "../core/CustomError";
 
 class Refresh {
   constructor(
@@ -15,18 +16,28 @@ class Refresh {
   };
 
   private validateRefreshToken = (refreshToken: RefreshToken, accessTokenValue: string) => {
-    const isExpired = isBefore(refreshToken.expiration, new Date());
-    const isInvalidated = !refreshToken.valid;
-    const isNotForAccessToken = refreshToken.accessTokenValue !== accessTokenValue;
-    if (isExpired || isInvalidated || isNotForAccessToken) {
-      throw new InvalidToken();
+    if (isBefore(refreshToken.expiration, new Date())) {
+      throw new ExpiredRefreshToken();
+    }
+    if (!refreshToken.valid) {
+      throw new InvalidRefreshToken();
+    }
+    if (refreshToken.accessTokenValue !== accessTokenValue) {
+      throw new RefreshTokenAndAccessTokenMismatch();
     }
   };
 }
 
-export class InvalidToken extends Error {
-  name = "InvalidToken";
-  message = "The provided token is invalid";
+export class ExpiredRefreshToken extends CustomError {
+  name = "ExpiredRefreshToken";
+}
+
+export class InvalidRefreshToken extends CustomError {
+  name = "InvalidRefreshToken";
+}
+
+export class RefreshTokenAndAccessTokenMismatch extends CustomError {
+  name = "RefreshTokenAndAccessTokenMismatch";
 }
 
 export default Refresh;

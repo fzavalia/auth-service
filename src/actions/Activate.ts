@@ -34,10 +34,16 @@ class Activate {
   };
 }
 
-export class ExpiredActivationSecret extends CustomError {}
+export class ExpiredActivationSecret extends CustomError {
+  name = "ExpiredActivationSecret";
+}
 
-export class UsedActivationSecret extends CustomError {}
+export class UsedActivationSecret extends CustomError {
+  name = "UsedActivationSecret";
+}
 
-export class AccountAlreadyActive extends CustomError {}
+export class AccountAlreadyActive extends CustomError {
+  name = "AccountAlreadyActive";
+}
 
 export default Activate;

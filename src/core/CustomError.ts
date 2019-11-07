@@ -1,5 +1,5 @@
 abstract class CustomError extends Error {
-  name = this.constructor.name;
+  abstract name: string;
 }
 
 export default CustomError;
