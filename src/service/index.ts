@@ -9,21 +9,14 @@ import TypeOrmRepository from "../repository/typeOrm/TypeOrmRepository";
 import TypeOrmAccountRepository from "../repository/typeOrm/TypeOrmAccountRepository";
 import TypeOrmActivationSecretRepository from "../repository/typeOrm/TypeOrmActivationSecretRepository";
 import TypeOrmAccessTokenRepository from "../repository/typeOrm/TypeOrmAccessTokenRepository";
+import TypeOrmRefreshTokenRepository from "../repository/typeOrm/TypeOrmRefreshTokenRepository";
 
 TypeOrmRepository.createConnection();
-
-const db: InMemoryDB = {
-  accounts: {},
-  activationSecrets: {},
-  accessTokens: {},
-  refreshTokens: {},
-};
-
-const { refreshTokenRepository } = makeRepositories.inMemory(db);
 
 const accountRepository = new TypeOrmAccountRepository();
 const activationSecretRepository = new TypeOrmActivationSecretRepository();
 const accessTokenRepository = new TypeOrmAccessTokenRepository();
+const refreshTokenRepository = new TypeOrmRefreshTokenRepository();
 
 const tokenFactory = new TokenFactory(
   accessTokenRepository,
@@ -90,10 +83,6 @@ app.post("/authenticate", (req, res) => {
   authenticate(accessToken)
     .then(() => res.send({ status: "ok" }))
     .catch(makeCatchHandler(res));
-});
-
-app.get("/repository", (_, res) => {
-  res.send(JSON.stringify(db));
 });
 
 app.listen(3000, () => {
