@@ -23,30 +23,6 @@ abstract class TypeOrmRepository {
       console.log("Could not connect to Database");
     }
   };
-
-  // static find = <T>(key: string, value: string, entity: new () => T) =>
-  //   getConnection()
-  //     .getRepository(entity)
-  //     .findOne({ where: { [key]: value } })
-  //     .then(e => {
-  //       if (!e) {
-  //         throw new NotFound();
-  //       } else {
-  //         return e;
-  //       }
-  //     });
-
-  // static create = <T>(e: T, entity: any) =>
-  //   getConnection()
-  //     .getRepository(entity)
-  //     .save(e)
-  //     .then(() => {});
-
-  // static update = <T>(key: string, value: string, data: any, entity: any) =>
-  //   getConnection()
-  //     .getRepository(entity)
-  //     .update({ [key]: value }, data)
-  //     .then(() => {});
 }
 
 export default TypeOrmRepository;
