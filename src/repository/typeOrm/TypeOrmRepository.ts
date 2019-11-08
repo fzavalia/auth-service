@@ -24,29 +24,29 @@ abstract class TypeOrmRepository {
     }
   };
 
-  static find = <T>(key: string, value: string, entity: new () => T) =>
-    getConnection()
-      .getRepository(entity)
-      .findOne({ where: { [key]: value } })
-      .then(e => {
-        if (!e) {
-          throw new NotFound();
-        } else {
-          return e;
-        }
-      });
+  // static find = <T>(key: string, value: string, entity: new () => T) =>
+  //   getConnection()
+  //     .getRepository(entity)
+  //     .findOne({ where: { [key]: value } })
+  //     .then(e => {
+  //       if (!e) {
+  //         throw new NotFound();
+  //       } else {
+  //         return e;
+  //       }
+  //     });
 
-  static create = <T>(e: T, entity: any) =>
-    getConnection()
-      .getRepository(entity)
-      .save(e)
-      .then(() => {});
+  // static create = <T>(e: T, entity: any) =>
+  //   getConnection()
+  //     .getRepository(entity)
+  //     .save(e)
+  //     .then(() => {});
 
-  static update = <T>(key: string, value: string, data: any, entity: any) =>
-    getConnection()
-      .getRepository(entity)
-      .update({ [key]: value }, data)
-      .then(() => {});
+  // static update = <T>(key: string, value: string, data: any, entity: any) =>
+  //   getConnection()
+  //     .getRepository(entity)
+  //     .update({ [key]: value }, data)
+  //     .then(() => {});
 }
 
 export default TypeOrmRepository;
