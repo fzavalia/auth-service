@@ -1,31 +1,18 @@
 import ActivationSecretRepository, { ActivationSecret } from "../ActivationSecretRepository";
 import { getConnection } from "typeorm";
 import TypeOrmActivationSecretEntity from "./entities/TypeOrmActivationSecretEntity";
-import { NotFound } from "../inMemory/InMemoryRepository";
+import TypeOrmRepository from "./TypeOrmRepository";
 
 class TypeOrmActivationSecretRepository implements ActivationSecretRepository {
-  find = (value: string) =>
-    getConnection()
-      .getRepository(TypeOrmActivationSecretEntity)
-      .findOne({ where: { value } })
-      .then(activationSecret => {
-        if (!activationSecret) {
-          throw new NotFound();
-        } else {
-          return activationSecret;
-        }
-      });
+  find = (value: string) => TypeOrmRepository.find("value", value, TypeOrmActivationSecretEntity);
+
+  create = (activationSecret: ActivationSecret) =>
+    TypeOrmRepository.create(activationSecret, TypeOrmActivationSecretEntity);
 
   use = (value: string) =>
     getConnection()
       .getRepository(TypeOrmActivationSecretEntity)
       .update({ value }, { used: true })
-      .then(() => {});
-
-  create = (activationSecret: ActivationSecret) =>
-    getConnection()
-      .getRepository(TypeOrmActivationSecretEntity)
-      .save(activationSecret)
       .then(() => {});
 }
 
