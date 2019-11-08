@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import AccountRepository from "../repository/AccountRepository";
 import uuid from "uuid/v4";
 import ActivationSecretRepository from "../repository/ActivationSecretRepository";
