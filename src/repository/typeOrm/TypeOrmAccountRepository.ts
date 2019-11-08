@@ -1,5 +1,4 @@
 import AccountRepository, { Account } from "../AccountRepository";
-import { getConnection } from "typeorm";
 import TypeOrmAccountEntity from "./entities/TypeOrmAccountEntity";
 import TypeOrmRepository from "./TypeOrmRepository";
 
@@ -9,10 +8,7 @@ class TypeOrmAccountRepository implements AccountRepository {
   create = (account: Account) => TypeOrmRepository.create(account, TypeOrmAccountEntity);
 
   activate = (username: string) =>
-    getConnection()
-      .getRepository(TypeOrmAccountEntity)
-      .update({ username }, { active: true })
-      .then(() => {});
+    TypeOrmRepository.update("username", username, { active: true }, TypeOrmAccountEntity);
 }
 
 export default TypeOrmAccountRepository;

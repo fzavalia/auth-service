@@ -36,10 +36,16 @@ abstract class TypeOrmRepository {
         }
       });
 
-  static create = <T>(e: T, entity: new () => T) =>
+  static create = <T>(e: T, entity: any) =>
     getConnection()
       .getRepository(entity)
       .save(e)
+      .then(() => {});
+
+  static update = <T>(key: string, value: string, data: any, entity: any) =>
+    getConnection()
+      .getRepository(entity)
+      .update({ [key]: value }, data)
       .then(() => {});
 }
 
