@@ -8,6 +8,7 @@ import { BcryptPasswordResolver } from "../core/PasswordResolver";
 import TypeOrmRepository from "../repository/typeOrm/TypeOrmRepository";
 import TypeOrmAccountRepository from "../repository/typeOrm/TypeOrmAccountRepository";
 import TypeOrmActivationSecretRepository from "../repository/typeOrm/TypeOrmActivationSecretRepository";
+import TypeOrmAccessTokenRepository from "../repository/typeOrm/TypeOrmAccessTokenRepository";
 
 TypeOrmRepository.createConnection();
 
@@ -18,10 +19,11 @@ const db: InMemoryDB = {
   refreshTokens: {},
 };
 
-const { accessTokenRepository, refreshTokenRepository } = makeRepositories.inMemory(db);
+const { refreshTokenRepository } = makeRepositories.inMemory(db);
 
 const accountRepository = new TypeOrmAccountRepository();
 const activationSecretRepository = new TypeOrmActivationSecretRepository();
+const accessTokenRepository = new TypeOrmAccessTokenRepository();
 
 const tokenFactory = new TokenFactory(
   accessTokenRepository,
