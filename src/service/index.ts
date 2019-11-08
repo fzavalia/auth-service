@@ -5,7 +5,9 @@ import * as config from "./config";
 import makeActions from "./makeActions";
 import makeRepositories, { InMemoryDB } from "./makeRepositories";
 import { BcryptPasswordResolver } from "../core/PasswordResolver";
-import "reflect-metadata";
+import TypeOrmRepository from "../repository/typeOrm/TypeOrmRepository";
+
+TypeOrmRepository.createConnection();
 
 const db: InMemoryDB = {
   accounts: {},
