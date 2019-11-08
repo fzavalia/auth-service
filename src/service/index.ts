@@ -17,14 +17,9 @@ const db: InMemoryDB = {
   refreshTokens: {},
 };
 
-const {
-  accountRepository,
-  activationSecretRepository,
-  accessTokenRepository,
-  refreshTokenRepository,
-} = makeRepositories.inMemory(db);
+const { activationSecretRepository, accessTokenRepository, refreshTokenRepository } = makeRepositories.inMemory(db);
 
-const typeormAccountRepository = new TypeOrmAccountRepository();
+const accountRepository = new TypeOrmAccountRepository();
 
 const tokenFactory = new TokenFactory(
   accessTokenRepository,
@@ -35,7 +30,7 @@ const tokenFactory = new TokenFactory(
 
 const { activate, authenticate, login, refresh, register } = makeActions({
   accessTokenRepository,
-  accountRepository: typeormAccountRepository,
+  accountRepository: accountRepository,
   activationSecretRepository,
   refreshTokenRepository,
   tokenFactory,
