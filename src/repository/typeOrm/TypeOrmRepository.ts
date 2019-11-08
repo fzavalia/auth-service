@@ -1,5 +1,4 @@
-import { createConnection, ConnectionOptions, getConnection } from "typeorm";
-import { NotFound } from "../inMemory/InMemoryRepository";
+import { createConnection, ConnectionOptions } from "typeorm";
 import "reflect-metadata";
 
 const connectionConfig: ConnectionOptions = {
