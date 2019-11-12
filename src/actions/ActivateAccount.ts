@@ -3,7 +3,7 @@ import AccountRepository, { Account } from "../repository/AccountRepository";
 import { isBefore } from "date-fns";
 import CustomError from "../core/CustomError";
 
-class Activate {
+class ActivateAccount {
   constructor(
     private readonly activationSecretRepository: ActivationSecretRepository,
     private readonly accountRepository: AccountRepository,
@@ -46,4 +46,4 @@ export class AccountAlreadyActive extends CustomError {
   name = "AccountAlreadyActive";
 }
 
-export default Activate;
+export default ActivateAccount;

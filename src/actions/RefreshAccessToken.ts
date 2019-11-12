@@ -3,7 +3,7 @@ import TokenFactory from "../core/TokenFactory";
 import { isBefore } from "date-fns";
 import CustomError from "../core/CustomError";
 
-class Refresh {
+class RefreshAccessToken {
   constructor(
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly tokenFactory: TokenFactory,
@@ -40,4 +40,4 @@ export class RefreshTokenAndAccessTokenMismatch extends CustomError {
   name = "RefreshTokenAndAccessTokenMismatch";
 }
 
-export default Refresh;
+export default RefreshAccessToken;

@@ -5,7 +5,7 @@ import { addMinutes } from "date-fns";
 import CustomError from "../core/CustomError";
 import PasswordResolver from "../core/PasswordResolver";
 
-class Register {
+class RegisterAccount {
   constructor(
     private readonly accountRepository: AccountRepository,
     private readonly activationSecretRepository: ActivationSecretRepository,
@@ -45,4 +45,4 @@ export class PasswordsDoNotMatch extends CustomError {
   name = "PasswordsDoNotMatch";
 }
 
-export default Register;
+export default RegisterAccount;

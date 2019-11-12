@@ -3,7 +3,7 @@ import { validateError, makeMergeRepositoryDataFunction } from "../../utils/test
 import { NotFound } from "../../repository/inMemory/InMemoryRepository";
 import TokenFactory from "../../core/TokenFactory";
 import InMemoryRefreshTokenRepository from "../../repository/inMemory/InMemoryRefreshTokenRepository";
-import Refresh from "../../actions/Refresh";
+import RefreshAccessToken from "../../actions/RefreshAccessToken";
 import { addDays, subDays } from "date-fns";
 
 const makeRefresh = (mergeableAccessTokensData: any, mergeableRefreshTokensData: any) => {
@@ -22,7 +22,7 @@ const makeRefresh = (mergeableAccessTokensData: any, mergeableRefreshTokensData:
   const accessTokens = new InMemoryAccessTokenRepository(mergeAccessTokensData(mergeableAccessTokensData));
   const refreshTokens = new InMemoryRefreshTokenRepository(mergeRefreshTokensData(mergeableRefreshTokensData));
   const tokenFactory = new TokenFactory(accessTokens, refreshTokens, 10, 10);
-  return new Refresh(refreshTokens, tokenFactory).exec;
+  return new RefreshAccessToken(refreshTokens, tokenFactory).exec;
 };
 
 describe("Refresh", () => {

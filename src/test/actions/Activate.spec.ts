@@ -1,5 +1,5 @@
 import InMemoryActivationSecretRepository from "../../repository/inMemory/InMemoryActivationSecretRepository";
-import Activate, { UsedActivationSecret, AccountAlreadyActive, ExpiredActivationSecret } from "../../actions/Activate";
+import ActivateAccount, { UsedActivationSecret, AccountAlreadyActive, ExpiredActivationSecret } from "../../actions/ActivateAccount";
 import InMemoryAccountRepository from "../../repository/inMemory/InMemoryAccountRepository";
 import { addDays, subDays } from "date-fns";
 import { makeMergeRepositoryDataFunction, validateError } from "../../utils/testUtils";
@@ -27,7 +27,7 @@ const makeActivate = (opts: { activationSecretRepoMergeData?: any; accountRepoMe
   const activationSecretRepo = new InMemoryActivationSecretRepository(activationSecretRepoData);
   const accountRepoData = accountRepoDataMerge(opts.accountRepoMergeData);
   const accountRepo = new InMemoryAccountRepository(accountRepoData);
-  return new Activate(activationSecretRepo, accountRepo).exec;
+  return new ActivateAccount(activationSecretRepo, accountRepo).exec;
 };
 
 describe("Activate", () => {

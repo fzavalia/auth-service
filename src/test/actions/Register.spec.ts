@@ -1,6 +1,6 @@
 import { validateError, makeMergeRepositoryDataFunction } from "../../utils/testUtils";
 import { AlreadyExists } from "../../repository/inMemory/InMemoryRepository";
-import Register, { PasswordsDoNotMatch } from "../../actions/Register";
+import RegisterAccount, { PasswordsDoNotMatch } from "../../actions/RegisterAccount";
 import InMemoryAccountRepository from "../../repository/inMemory/InMemoryAccountRepository";
 import InMemoryActivationSecretRepository from "../../repository/inMemory/InMemoryActivationSecretRepository";
 import { Account } from "../../repository/AccountRepository";
@@ -10,7 +10,7 @@ const makeRegister = (mergeableAccountData: any) => {
   const accountsData = makeMergeRepositoryDataFunction<Account>({})(mergeableAccountData);
   const accounts = new InMemoryAccountRepository(accountsData);
   const activationSecrets = new InMemoryActivationSecretRepository();
-  return new Register(accounts, activationSecrets, new StubPasswordResolver(), 10).exec;
+  return new RegisterAccount(accounts, activationSecrets, new StubPasswordResolver(), 10).exec;
 };
 
 describe("Refresh", () => {

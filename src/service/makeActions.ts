@@ -1,8 +1,8 @@
 import Authenticate from "../actions/Authenticate";
-import Activate from "../actions/Activate";
-import Refresh from "../actions/Refresh";
+import ActivateAccount from "../actions/ActivateAccount";
+import RefreshAccessToken from "../actions/RefreshAccessToken";
 import Login from "../actions/Login";
-import Register from "../actions/Register";
+import RegisterAccount from "../actions/RegisterAccount";
 import AccessTokenRepository from "../repository/AccessTokenRepository";
 import ActivationSecretRepository from "../repository/ActivationSecretRepository";
 import AccountRepository from "../repository/AccountRepository";
@@ -20,10 +20,10 @@ export default (deps: {
   activationSecretExpiration: number;
 }) => ({
   authenticate: new Authenticate(deps.accessTokenRepository).exec,
-  activate: new Activate(deps.activationSecretRepository, deps.accountRepository).exec,
-  refresh: new Refresh(deps.refreshTokenRepository, deps.tokenFactory).exec,
+  activate: new ActivateAccount(deps.activationSecretRepository, deps.accountRepository).exec,
+  refresh: new RefreshAccessToken(deps.refreshTokenRepository, deps.tokenFactory).exec,
   login: new Login(deps.accountRepository, deps.tokenFactory, deps.passwordResolver).exec,
-  register: new Register(
+  register: new RegisterAccount(
     deps.accountRepository,
     deps.activationSecretRepository,
     deps.passwordResolver,
