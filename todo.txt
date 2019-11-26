@@ -1,0 +1,22 @@
+register an account with username and password
+    a password confirmation field must be validated as well
+    passwords are to be stored salted
+
+login with username and password
+    returns an access token (jwt) after doing it successfully with an expiration
+
+validate access token
+    validates the access token
+
+----
+
+app layers
+    service
+        akka http
+            POST /login
+            POST /register
+            POST /authenticate
+    core
+        application logic
+    database
+        data storage logic
