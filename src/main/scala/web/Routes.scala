@@ -6,17 +6,20 @@ import akka.http.scaladsl.server.Directives._
 import spray.json.DefaultJsonProtocol
 import scala.concurrent.Future
 
+object RoutesJsonSupport extends DefaultJsonProtocol {
+  implicit val registerRequestFormat     = jsonFormat3(RegisterRequest)
+  implicit val loginRequestFormat        = jsonFormat2(LoginRequest)
+  implicit val loginResponseFormat       = jsonFormat1(LoginResponse)
+  implicit val authenticateRequestFormat = jsonFormat1(AuthenticateRequest)
+}
+
 case class Routes(
     registerHandler: RegisterRequest => Future[Either[RegisterException, Unit]],
     loginHandler: LoginRequest => Future[Either[LoginException, LoginResponse]],
     authenticateHandler: AuthenticateRequest => Future[Either[AuthenticationException, Unit]])
-    extends DefaultJsonProtocol
-    with SprayJsonSupport {
+    extends SprayJsonSupport {
 
-  protected implicit val registerRequestFormat     = jsonFormat3(RegisterRequest)
-  protected implicit val loginRequestFormat        = jsonFormat2(LoginRequest)
-  protected implicit val loginResponseFormat       = jsonFormat1(LoginResponse)
-  protected implicit val authenticateRequestFormat = jsonFormat1(AuthenticateRequest)
+  import RoutesJsonSupport._
 
   lazy val get = concat(
     path("register") {
