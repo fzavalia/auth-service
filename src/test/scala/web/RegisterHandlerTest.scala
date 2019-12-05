@@ -17,7 +17,9 @@ class RegisterHandlerTest extends AsyncWordSpec with Matchers {
 
     "fail with handled error when passwords don't match" in {
       val rh = new RegisterHandler()
-      rh.handle(RegisterRequest("username", "password", "other")).map(_.isLeft shouldBe true)
+      rh.handle(RegisterRequest("username", "password", "other")).map {
+        case Left(ex) => ex.shouldBe(PasswordConfirmationMismatch)
+      }
     }
   }
 

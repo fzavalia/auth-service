@@ -13,24 +13,30 @@ class RoutesTest extends WordSpec with Matchers with ScalatestRouteTest with Spr
 
   val routes = Routes(new RegisterHandler(),
                       _ => Future { Right(LoginResponse("accessToken")) },
-                      _ => Future { Right() })
+                      _ => Future { Right() }).get
 
   "Routes" should {
 
     "have a register route" in {
-      Post("/register", RegisterRequest("username", "password", "passworda")) -> routes -> check {
+
+      Post("/register", RegisterRequest("username", "password", "password")) ~> routes ~> check {
         response.status shouldBe StatusCodes.OK
+      }
+
+      Post("/register", RegisterRequest("username", "password", "other")) ~> routes ~> check {
+        response.status shouldBe PasswordConfirmationMismatch.statusCode
       }
     }
 
     "have a login route" in {
-      Post("/login", LoginRequest("username", "password")) -> routes -> check {
+      Post("/login", LoginRequest("username", "password")) ~> routes ~> check {
         response.status shouldBe StatusCodes.OK
+        responseAs[LoginResponse].accessToken shouldBe "accessToken"
       }
     }
 
     "have an authenticate route" in {
-      Post("/authenticate", AuthenticateRequest("accessToken")) -> routes -> check {
+      Post("/authenticate", AuthenticateRequest("accessToken")) ~> routes ~> check {
         response.status shouldBe StatusCodes.OK
       }
     }
