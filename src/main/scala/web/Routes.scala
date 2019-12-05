@@ -14,9 +14,9 @@ object RoutesJsonSupport extends DefaultJsonProtocol {
 }
 
 case class Routes(
-    registerHandler: RegisterRequest => Future[Either[RegisterException, Unit]],
-    loginHandler: LoginRequest => Future[Either[LoginException, LoginResponse]],
-    authenticateHandler: AuthenticateRequest => Future[Either[AuthenticationException, Unit]])
+    register: RegisterHandler,
+    login: LoginRequest => Future[Either[LoginException, LoginResponse]],
+    authenticate: AuthenticateRequest => Future[Either[AuthenticationException, Unit]])
     extends SprayJsonSupport {
 
   import RoutesJsonSupport._
@@ -25,7 +25,7 @@ case class Routes(
     path("register") {
       post {
         entity(as[RegisterRequest]) { registerRequest =>
-          onSuccess(registerHandler(registerRequest)) {
+          onSuccess(register.handle(registerRequest)) {
             case Left(ex) => complete(HttpResponse(ex.statusCode))
             case Right(_) => complete(HttpResponse(StatusCodes.OK))
           }
@@ -35,7 +35,7 @@ case class Routes(
     path("login") {
       post {
         entity(as[LoginRequest]) { loginRequest =>
-          onSuccess(loginHandler(loginRequest)) {
+          onSuccess(login(loginRequest)) {
             case Left(ex)             => complete(HttpResponse(ex.statusCode))
             case Right(loginResponse) => complete(loginResponse)
           }
@@ -45,7 +45,7 @@ case class Routes(
     path("authenticate") {
       post {
         entity(as[AuthenticateRequest]) { authenticateRequest =>
-          onSuccess(authenticateHandler(authenticateRequest)) {
+          onSuccess(authenticate(authenticateRequest)) {
             case Left(ex) => complete(HttpResponse(ex.statusCode))
             case Right(_) => complete(HttpResponse(StatusCodes.OK))
           }

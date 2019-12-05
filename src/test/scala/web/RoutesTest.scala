@@ -11,21 +11,24 @@ class RoutesTest extends WordSpec with Matchers with ScalatestRouteTest with Spr
 
   import RoutesJsonSupport._
 
-  val routes = Routes(_ => Future { Right() },
+  val routes = Routes(new RegisterHandler(),
                       _ => Future { Right(LoginResponse("accessToken")) },
                       _ => Future { Right() })
 
   "Routes" should {
+
     "have a register route" in {
-      Post("/register", RegisterRequest("username", "password", "passwordConfirmation")) -> routes -> check {
+      Post("/register", RegisterRequest("username", "password", "passworda")) -> routes -> check {
         response.status shouldBe StatusCodes.OK
       }
     }
+
     "have a login route" in {
       Post("/login", LoginRequest("username", "password")) -> routes -> check {
         response.status shouldBe StatusCodes.OK
       }
     }
+
     "have an authenticate route" in {
       Post("/authenticate", AuthenticateRequest("accessToken")) -> routes -> check {
         response.status shouldBe StatusCodes.OK
