@@ -13,6 +13,8 @@ class Server(config: ServerConfig, routes: Routes)(implicit val ec: ExecutionCon
 
   private val serverBindingFuture = Http().bindAndHandle(routes.get, config.host, config.port)
 
+  println(s"Listening on http://${config.host}:${config.port}")
+
   StdIn.readLine()
 
   serverBindingFuture
