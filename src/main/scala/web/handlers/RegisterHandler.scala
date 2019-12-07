@@ -1,6 +1,7 @@
-package web
+package web.handlers
 
 import core.Password
+import web.{PasswordConfirmationMismatch, RegisterException, RegisterRequest}
 
 import scala.concurrent.{ExecutionContext, Future}
 

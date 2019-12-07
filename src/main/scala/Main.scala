@@ -1,13 +1,6 @@
-import core.Password
-import web.{
-  LoginResponse,
-  PasswordConfirmationMismatch,
-  RegisterHandler,
-  RegisterRequest,
-  Routes,
-  Server,
-  ServerConfig
-}
+import core.AccessToken
+import web.handlers.{LoginHandler, RegisterHandler}
+import web.{Routes, Server, ServerConfig}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -17,8 +10,13 @@ object Main extends App {
 
   new Server(
     ServerConfig("localhost", 8080),
-    Routes(new RegisterHandler(),
-           _ => Future { Right(LoginResponse("accessToken")) },
-           _ => Future { Right() })
+    Routes(
+      new RegisterHandler(),
+      new LoginHandler(
+        (_: String) => Future(None),
+        () => AccessToken("accessToken")
+      ),
+      _ => Future { Right() }
+    )
   )
 }

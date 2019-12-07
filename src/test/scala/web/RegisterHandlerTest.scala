@@ -1,6 +1,7 @@
 package web
 
 import org.scalatest.{AsyncWordSpec, Matchers, WordSpec}
+import web.handlers.RegisterHandler
 
 import scala.concurrent.ExecutionContext
 
@@ -22,5 +23,4 @@ class RegisterHandlerTest extends AsyncWordSpec with Matchers {
       }
     }
   }
-
 }

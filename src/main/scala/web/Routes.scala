@@ -4,6 +4,8 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import spray.json.DefaultJsonProtocol
+import web.handlers.{LoginHandler, RegisterHandler}
+
 import scala.concurrent.Future
 
 object RoutesJsonSupport extends DefaultJsonProtocol {
@@ -15,7 +17,7 @@ object RoutesJsonSupport extends DefaultJsonProtocol {
 
 case class Routes(
     register: RegisterHandler,
-    login: LoginRequest => Future[Either[LoginException, LoginResponse]],
+    login: LoginHandler,
     authenticate: AuthenticateRequest => Future[Either[AuthenticationException, Unit]])
     extends SprayJsonSupport {
 
@@ -35,7 +37,7 @@ case class Routes(
     path("login") {
       post {
         entity(as[LoginRequest]) { loginRequest =>
-          onSuccess(login(loginRequest)) {
+          onSuccess(login.handle(loginRequest)) {
             case Left(ex)             => complete(HttpResponse(ex.statusCode))
             case Right(loginResponse) => complete(loginResponse)
           }

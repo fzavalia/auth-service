@@ -3,7 +3,9 @@ package web
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import core.AccessToken
 import org.scalatest.{Matchers, WordSpec}
+import web.handlers.{LoginHandler, RegisterHandler}
 
 import scala.concurrent.Future
 
@@ -11,9 +13,10 @@ class RoutesTest extends WordSpec with Matchers with ScalatestRouteTest with Spr
 
   import RoutesJsonSupport._
 
-  val routes = Routes(new RegisterHandler(),
-                      _ => Future { Right(LoginResponse("accessToken")) },
-                      _ => Future { Right() }).get
+  val routes = Routes(
+    new RegisterHandler(),
+    new LoginHandler((_: String) => Future(None), () => AccessToken("accessToken")),
+    _ => Future { Right() }).get
 
   "Routes" should {
 
