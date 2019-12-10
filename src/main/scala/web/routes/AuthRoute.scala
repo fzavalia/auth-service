@@ -17,9 +17,5 @@ class AuthRoute(handler: AuthRequest => Future[Either[AuthException, Unit]])
   implicit private val authRequestFormat: RootJsonFormat[AuthRequest] = jsonFormat1(AuthRequest)
 
   def get: Route =
-    (path("auth") & post & entity(as[AuthRequest])) { request =>
-      responseFutureHandler(request) { _ =>
-        HttpResponse(StatusCodes.OK)
-      }
-    }
+    (path("auth") & post & entity(as[AuthRequest]))(handle)
 }

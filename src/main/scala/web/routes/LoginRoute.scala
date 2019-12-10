@@ -22,8 +22,6 @@ class LoginRoute(handler: LoginRequest => Future[Either[LoginException, LoginRes
 
   def get: Route =
     (path("login") & post & entity(as[LoginRequest])) { request =>
-      responseFutureHandler(request) { response =>
-        HttpResponse(entity = response.toJson.prettyPrint)
-      }
+      handle(request, response => HttpResponse(entity = response.toJson.prettyPrint))
     }
 }

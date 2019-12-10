@@ -17,9 +17,5 @@ class RegisterRoute(handler: RegisterRequest => Future[Either[RegisterException,
   implicit private val registerRequestFormat: RootJsonFormat[RegisterRequest] = jsonFormat3(RegisterRequest)
 
   def get: Route =
-    (path("register") & post & entity(as[RegisterRequest])) { request =>
-      responseFutureHandler(request) { _ =>
-        HttpResponse(StatusCodes.OK)
-      }
-    }
+    (path("register") & post & entity(as[RegisterRequest]))(handle)
 }
