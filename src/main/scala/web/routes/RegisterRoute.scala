@@ -6,7 +6,7 @@ import spray.json.RootJsonFormat
 
 case class RegisterRequest(username: String, password: String, passwordConfirmation: String)
 
-class RegisterRoute extends RouteBase[RegisterRequest, Unit] {
+object RegisterRoute extends RouteBase[RegisterRequest, Unit] {
 
   implicit private val registerRequestFormat: RootJsonFormat[RegisterRequest] = jsonFormat3(RegisterRequest)
 

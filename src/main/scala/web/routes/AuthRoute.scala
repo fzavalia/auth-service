@@ -8,7 +8,7 @@ case class AuthRequest(accessToken: String)
 
 trait AuthException extends RouteException
 
-class AuthRoute extends RouteBase[AuthRequest, Unit] {
+object AuthRoute extends RouteBase[AuthRequest, Unit] {
 
   implicit private val authRequestFormat: RootJsonFormat[AuthRequest] = jsonFormat1(AuthRequest)
 
