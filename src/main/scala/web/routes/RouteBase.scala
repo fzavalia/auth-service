@@ -13,12 +13,12 @@ trait RouteException extends Exception {
   val statusCode: StatusCode
 }
 
-abstract class RouteBase[Req, E <: RouteException, Res](protected val getResponse: Req => Future[Either[E, Res]])
-    extends DefaultJsonProtocol
-    with SprayJsonSupport {
+abstract class RouteBase[Req, Res] extends DefaultJsonProtocol with SprayJsonSupport {
 
-  def handle(req: Req, map: Res => HttpResponse): Route =
-    onComplete(getResponse(req)) {
+  type Compute = Req => Future[Either[RouteException, Res]]
+
+  protected def handle(req: Req, compute: Compute, map: Res => HttpResponse): Route =
+    onComplete(compute(req)) {
       case Failure(exception) => failWith(exception)
       case Success(either) =>
         either match {
@@ -29,6 +29,8 @@ abstract class RouteBase[Req, E <: RouteException, Res](protected val getRespons
         }
     }
 
-  def handle(req: Req): Route =
-    handle(req, _ => HttpResponse(StatusCodes.OK))
+  protected def handle(req: Req, compute: Compute): Route =
+    handle(req, compute, _ => HttpResponse(StatusCodes.OK))
+
+  def make(compute: Compute): Route
 }
