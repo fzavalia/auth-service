@@ -9,7 +9,7 @@ case class LoginRequest(username: String, password: String)
 
 case class LoginResponse(accessToken: String)
 
-class Login extends RouteBase[LoginRequest, LoginResponse] {
+class LoginRoute extends RouteBase[LoginRequest, LoginResponse] {
 
   implicit private val loginRequestFormat: RootJsonFormat[LoginRequest]   = jsonFormat2(LoginRequest)
   implicit private val loginResponseFormat: RootJsonFormat[LoginResponse] = jsonFormat1(LoginResponse)
