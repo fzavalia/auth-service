@@ -9,11 +9,13 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import org.mindrot.jbcrypt.BCrypt
 import spray.json._
-
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
+import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 import scala.io.StdIn
 import scala.util.Try
+import scala.concurrent.duration._
+import slick.jdbc.PostgresProfile.api._
 
 case class RegisterRequest(username: String, password: String, passwordConfirmation: String)
 case class LoginRequest(username: String, password: String)
@@ -32,20 +34,18 @@ object Main extends App with DefaultJsonProtocol with SprayJsonSupport {
   implicit private val authRequestFormat: RootJsonFormat[AuthRequest]         = jsonFormat1(AuthRequest)
   implicit private val errorResponseFormat: RootJsonFormat[ErrorResponse]     = jsonFormat1(ErrorResponse)
 
-  val accountRepository: AccountRepository = null
-
   private val routes: Route = concat(
     (path("register") & post & entity(as[RegisterRequest])) { req =>
       if (req.password != req.passwordConfirmation) {
         completeWithError(StatusCodes.BadRequest, "Passwords do not match!")
       } else {
-        accountRepository.create(Account(req.username, req.password))
+        AccountRepository.create(Account(req.username, req.password))
         complete(HttpResponse(StatusCodes.OK))
       }
     },
     (path("login") & post & entity(as[LoginRequest])) { req =>
-      val account: Account = accountRepository.find(req.username)
-      if (account.password != req.password) {
+      val account = AccountRepository.find(req.username)
+      if (Password.isInvalid(req.password, account.password)) {
         completeWithError(StatusCodes.Unauthorized, "Invalid Credentials!")
       } else {
         val accessToken: String = AccessTokenFactory.make
@@ -78,12 +78,42 @@ object Main extends App with DefaultJsonProtocol with SprayJsonSupport {
     .onComplete(_ => system.terminate())
 }
 
-trait AccountRepository {
-  def create(account: Account): Unit
-  def find(username: String): Account
+object AccountRepository {
+
+  val db = Database.forConfig("postgres")
+
+  case class AccountsTableRow(username: String, password: String)
+
+  class AccountsTable(tag: Tag) extends Table[AccountsTableRow](tag, "accounts") {
+    def username = column[String]("username", O.PrimaryKey)
+    def password = column[String]("password")
+    def foo      = column[String]("foo")
+    def *        = (username, password) <> (AccountsTableRow.tupled, AccountsTableRow.unapply)
+  }
+
+  val accounts = TableQuery[AccountsTable]
+
+  def create(account: Account): Unit = {
+    val insertAccount = accounts += AccountsTableRow(account.username, Password.hash(account.password))
+    Await.result(db.run(insertAccount), 5.seconds)
+  }
+
+  def find(username: String): Account = {
+    val findAccount  = accounts.filter(_.username === username).result.head
+    val slickAccount = Await.result(db.run(findAccount), 5.seconds)
+    Account(slickAccount.username, slickAccount.password)
+  }
 }
 
 case class Account(username: String, password: String)
+
+object Password {
+  private val rounds                                    = 10
+  private val salt: String                              = BCrypt.gensalt(rounds)
+  def hash(password: String): String                    = BCrypt.hashpw(password, salt)
+  def isValid(plain: String, hashed: String): Boolean   = BCrypt.checkpw(plain, hashed)
+  def isInvalid(plain: String, hashed: String): Boolean = !isValid(plain, hashed)
+}
 
 object AccessTokenFactory {
 
