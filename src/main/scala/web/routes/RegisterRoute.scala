@@ -1,14 +1,18 @@
 package web.routes
 
-import akka.http.scaladsl.server.Directives.{as, entity, path, post}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import spray.json.RootJsonFormat
+import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 case class RegisterRequest(username: String, password: String, passwordConfirmation: String)
 
+object RegisterRouteJsonSupport extends DefaultJsonProtocol {
+  implicit val registerRequestFormat: RootJsonFormat[RegisterRequest] = jsonFormat3(RegisterRequest)
+}
+
 object RegisterRoute extends RouteBase[RegisterRequest, Unit] {
 
-  implicit private val registerRequestFormat: RootJsonFormat[RegisterRequest] = jsonFormat3(RegisterRequest)
+  import RegisterRouteJsonSupport._
 
   def make(compute: Compute): Route =
     (path("register") & post & entity(as[RegisterRequest]))(req => handle(req, compute))

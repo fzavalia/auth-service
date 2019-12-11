@@ -1,6 +1,7 @@
 package web.routes
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.{HttpResponse, StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Directives.{complete, failWith, onComplete}
 import akka.http.scaladsl.server.Route
@@ -13,11 +14,11 @@ trait RouteException extends Exception {
   val statusCode: StatusCode
 }
 
-abstract class RouteBase[Req, Res] extends DefaultJsonProtocol with SprayJsonSupport {
+abstract class RouteBase[Req, Res] extends SprayJsonSupport {
 
   type Compute = Req => Future[Either[RouteException, Res]]
 
-  protected def handle(req: Req, compute: Compute, map: Res => HttpResponse): Route =
+  protected def handle(req: Req, compute: Compute, map: Res => ToResponseMarshallable): Route =
     onComplete(compute(req)) {
       case Failure(exception) => failWith(exception)
       case Success(either) =>
