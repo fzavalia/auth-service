@@ -1,8 +1,5 @@
-package web
-
-import java.time.LocalDateTime
+import java.util.Date
 import java.util.concurrent.TimeUnit
-import java.util.{Calendar, Date}
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -10,13 +7,12 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{HttpResponse, StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import spray.json._
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import scala.io.StdIn
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-
 import scala.util.Try
 
 case class RegisterRequest(username: String, password: String, passwordConfirmation: String)
