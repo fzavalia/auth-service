@@ -8,7 +8,6 @@ import akka.http.scaladsl.model.{HttpResponse, StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import org.mindrot.jbcrypt.BCrypt
-import slick.jdbc.PostgresProfile.api._
 import spray.json._
 
 import scala.concurrent.duration._
@@ -77,12 +76,15 @@ object Main extends App with DefaultJsonProtocol with SprayJsonSupport {
 }
 
 object DBConnection {
+  val api = slick.jdbc.PostgresProfile.api
+  import api._
   val db = Database.forConfig("postgres")
 }
 
 object AccountRepository {
 
   import DBConnection._
+  import api._
 
   case class AccountsTableRow(username: String, password: String)
 
@@ -111,6 +113,7 @@ case class Account(username: String, password: String)
 object AccessTokenRepository {
 
   import DBConnection._
+  import api._
 
   case class AccessTokenTableRow(value: String, username: String, created: Timestamp, deprecated: Boolean)
 
