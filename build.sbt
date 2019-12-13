@@ -10,7 +10,6 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http"            % "10.1.10"
 libraryDependencies += "com.typesafe.akka" %% "akka-stream"          % "2.6.0"
 libraryDependencies += "org.mindrot"       % "jbcrypt"               % "0.4"
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.10"
-libraryDependencies += "com.auth0"         % "java-jwt"              % "3.8.3"
 
 // deps - slick
 
