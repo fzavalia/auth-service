@@ -6,9 +6,10 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-object AccessTokenRepository {
+class AccessTokenRepository(protected val connection: DBConnection,
+                            protected val accountRepository: AccountRepository) {
 
-  import DBConnection._
+  import connection._
   import api._
 
   case class AccessTokenTableRow(value: String, username: String, created: Timestamp)
@@ -18,7 +19,7 @@ object AccessTokenRepository {
     def username = column[String]("username")
     def created  = column[Timestamp]("created")
     def *        = (value, username, created) <> (AccessTokenTableRow.tupled, AccessTokenTableRow.unapply)
-    def account  = foreignKey("account_fk", username, AccountRepository.accounts)(_.username)
+    def account  = foreignKey("account_fk", username, accountRepository.accounts)(_.username)
   }
 
   val accessTokens = TableQuery[AccessTokenTable]

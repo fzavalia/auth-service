@@ -20,9 +20,10 @@ libraryDependencies += "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2"
 // test deps
 
 libraryDependencies += "org.scalactic"     %% "scalactic"           % "3.0.8"
-libraryDependencies += "org.scalatest"     %% "scalatest"           % "3.0.8" % "test"
+libraryDependencies += "org.scalatest"     %% "scalatest"           % "3.0.8" % Test
 libraryDependencies += "com.typesafe.akka" %% "akka-stream-testkit" % "2.6.0"
 libraryDependencies += "com.typesafe.akka" %% "akka-http-testkit"   % "10.1.10"
+libraryDependencies += "com.h2database"    % "h2"                   % "1.0.60"
 
 // flyway db migrator
 
@@ -33,7 +34,3 @@ flywayLocations += "db/migration"
 flywayUrl := "jdbc:postgresql://localhost:5432/postgres"
 flywayUser := "postgres"
 flywayPassword := "postgres"
-
-flywayUrl in Test := "jdbc:postgresql://localhost:5433/postgres"
-flywayUser in Test := "postgres"
-flywayPassword in Test := "postgres"

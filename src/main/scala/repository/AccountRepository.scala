@@ -5,9 +5,9 @@ import core.Password
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-object AccountRepository {
+class AccountRepository(protected val connection: DBConnection) {
 
-  import DBConnection._
+  import connection._
   import api._
 
   case class AccountsTableRow(username: String, password: String)
