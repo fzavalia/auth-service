@@ -6,6 +6,5 @@ CREATE TABLE accounts (
 CREATE TABLE access_tokens (
     value TEXT PRIMARY KEY,
     username TEXT NOT NULL REFERENCES accounts(username),
-    created TIMESTAMP NOT NULL,
-    deprecated BOOLEAN NOT NULL
+    created TIMESTAMP NOT NULL
 );
