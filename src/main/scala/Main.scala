@@ -39,7 +39,7 @@ object Main extends App with DefaultJsonProtocol with SprayJsonSupport {
     },
     (path("login") & post & entity(as[LoginRequest])) { req =>
       val account = AccountRepository.find(req.username)
-      if (Password.isInvalid(req.password, account.password)) {
+      if (!Password.isValid(req.password, account.password)) {
         completeWithError(StatusCodes.Unauthorized, "Invalid Credentials!")
       } else {
         val accessToken = AccessTokenRepository.create(req.username)
